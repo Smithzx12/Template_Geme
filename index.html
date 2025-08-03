@@ -27,56 +27,25 @@
     </div>
 
     <script>
-        // ฟังก์ชันดึงรายการโฟลเดอร์จาก GitHub API
-        async function fetchFolders() {
-            const repo = '<username>/<repository>'; // แทนที่ด้วย username และ repository ของคุณ
-            const apiUrl = `https://api.github.com/repos/${repo}/contents`;
-            try {
-                const response = await fetch(apiUrl, {
-                    headers: {
-                        // ถ้า repository เป็นส่วนตัว ต้องใช้ token
-                        // 'Authorization': 'token <your-token>'
-                    }
-                });
-                if (!response.ok) throw new Error('ไม่สามารถดึงข้อมูลจาก GitHub API ได้');
-                const data = await response.json();
-                // กรองเฉพาะโฟลเดอร์ (type: 'dir') และสร้างลิงก์ไปยัง index.html
-                return data
-                    .filter(item => item.type === 'dir')
-                    .map(item => ({
-                        name: item.name,
-                        path: `${item.name}/index.html`
-                    }));
-            } catch (error) {
-                console.error('เกิดข้อผิดพลาด:', error);
-                return [];
-            }
-        }
+        // สมมติว่านี่คือรายการโฟลเดอร์ (คุณสามารถปรับให้ดึงจาก GitHub API ได้)
+        const folders = [
+            { name: 'folder1', path: 'folder1/index.html' },
+            { name: 'folder2', path: 'folder2/index.html' },
+            // เพิ่มโฟลเดอร์อื่น ๆ ตามโครงสร้าง repository ของคุณ
+        ];
 
-        // แสดงโฟลเดอร์เป็นการ์ด
-        async function displayFolders() {
-            const folderList = document.getElementById('folder-list');
-            const folders = await fetchFolders();
+        const folderList = document.getElementById('folder-list');
 
-            if (folders.length === 0) {
-                folderList.innerHTML = '<p class="text-center text-gray-500">ไม่พบโฟลเดอร์ใน repository</p>';
-                return;
-            }
-
-            folders.forEach(folder => {
-                const card = document.createElement('a');
-                card.href = folder.path;
-                card.className = 'folder-card bg-blue-500 text-white p-4 rounded-lg shadow-md hover:bg-blue-600';
-                card.innerHTML = `
-                    <h2 class="text-lg font-semibold">${folder.name}</h2>
-                    <p class="text-sm">คลิกเพื่อดูเนื้อหาใน ${folder.name}</p>
-                `;
-                folderList.appendChild(card);
-            });
-        }
-
-        // เรียกฟังก์ชันเมื่อหน้าเว็บโหลด
-        displayFolders();
+        folders.forEach(folder => {
+            const card = document.createElement('a');
+            card.href = folder.path;
+            card.className = 'folder-card bg-blue-500 text-white p-4 rounded-lg shadow-md hover:bg-blue-600';
+            card.innerHTML = `
+                <h2 class="text-lg font-semibold">${folder.name}</h2>
+                <p class="text-sm">คลิกเพื่อดูเนื้อหาใน ${folder.name}</p>
+            `;
+            folderList.appendChild(card);
+        });
     </script>
 </body>
 </html>
